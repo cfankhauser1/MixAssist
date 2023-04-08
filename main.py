@@ -12,6 +12,9 @@
 
 from subprocess import Popen
 import pyautogui
+import os
+
+test_path = '/Users/calebfankhauser/Desktop/MixAssist Test'
 
 track_list_start = (21,191)
 color_pos_dict = {
@@ -55,18 +58,35 @@ nav_bar_dict = {
 
 class Sorter:
     '''sorts instruments into dict with number of occurances as values'''
-    def __init__(self):
-        self.tracks = []
-        self.instruments_involved = []
-        self.drum_keys = ["kick", "snare", "toms", "overheads", "oh", "rooms"]
-        self.bass_keys = ["bass", "di_bass", "bass_amp"]
-        self.guitar_keys = ["guitar", "gtr", "electric", "acoustic"]
-        self.keyboard_keys = ["keys", "piano", "wurli", "synth"]
-        self.lead_vox_keys = ["lead_vox", "vocals", "vox"]
-        self.bg_vox_keys = ["bg_vox", "backgrounds", "harmonies", "harmony"]
+    ### longterm figure out a better way to classify tracks than these key lists
+    def __init__(self, track_directory: str):
+        #TODO: Read file names in folder to add to tracks list
+        self.tracks = os.listdir(track_directory)
+        self.formated_tracks = [item.replace('.wav', '') for item in self.tracks]
+        self.instrument_groups = []
+        self.keyword_dict = {
+            'drums': ["kick", "snare", "toms", "overheads", "oh", "rooms"],
+            'bass': ["bass", "di_bass", "bass_amp"],
+            'guitars': ["guitar", "gtr", "electric", "acoustic"],
+            'keyboards': ["keys", "piano", "wurli", "synth"],
+            'lead_vox': ["lead_vox", "vocals", "vox"],
+            'bg_vox': ["bg_vox", "backgrounds", "harmonies", "harmony"]
+        }
+        for item in self.formated_tracks:
+            for key in self.keyword_dict:
+                if item in self.keyword_dict.get(key):
+                    if key not in self.instrument_groups:
+                        self.instrument_groups.append(key)
 
     def sort(self):
-        master_dict = {instrument: 0 for instrument in self.instruments_involved}
+        master_dict = {instrument: 0 for instrument in self.instrument_groups}
+        for item in self.formated_tracks:
+            for key in self.keyword_dict:
+                if item in self.keyword_dict.get(key):
+                    master_dict[key] += 1
+        return master_dict
+
+
 
 
 
@@ -78,7 +98,9 @@ def import_template():
     pyautogui.press('enter')
 
 print(pyautogui.position())
-import_template()
+
+
+
 
 
 
