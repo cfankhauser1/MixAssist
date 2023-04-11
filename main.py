@@ -1,6 +1,5 @@
 # TODO: Create master template for track order
 # TODO: Load files into Luna (is this even possible?)
-# TODO: keep list of number of each track type (drums, bass, keys etc)
 # TODO: figure out how to read text from Luna GUI
 # TODO: color code files by track type, select first item in tracks list color palate, click, move mouse to correct color, /n
 #  change color, move on with arrow key
@@ -15,24 +14,27 @@ import pyautogui
 import os
 
 test_path = '/Users/calebfankhauser/Desktop/MixAssist Test'
+x,y = pyautogui.size()
+screen_size = int(str(x)),int(str(y))
+
 
 track_list_start = (21,191)
 color_pos_dict = {
     "ocean_blue": (137, 358),
     "light_blue": (119, 348),
-    "blue": (102, 348),
+    "drums": (102, 348),
     "dark_blue": (91, 332),
-    "purple": (80, 314),
+    "bass": (80, 314),
     "pink": (86, 294),
-    "flamingo": (80, 276),
+    "bs_vox": (80, 276),
     "hot_pink": (104, 260),
-    "red": (119, 253),
+    "lead_vox": (119, 253),
     "orange": (138, 252),
-    "tangerine": (158, 259),
+    "keys": (158, 259),
     "gold": (172, 275),
     "yellow": (184, 295),
     "key_lime": (182, 313),
-    "green": (170, 330),
+    "guitars": (170, 330),
     "sea_foam": (156, 348),
     "sat_ocean_blue": (146, 386),
     "sat_light_blue": (114, 392),
@@ -79,12 +81,19 @@ class Sorter:
                         self.instrument_groups.append(key)
 
     def sort(self):
-        master_dict = {instrument: 0 for instrument in self.instrument_groups}
+        master_dict = {instrument: {"number": 0, "color": color_pos_dict.get(instrument)} for instrument in self.instrument_groups}
+
         for item in self.formated_tracks:
             for key in self.keyword_dict:
                 if item in self.keyword_dict.get(key):
-                    master_dict[key] += 1
+                    master_dict[key]["number"] += 1
         return master_dict
+
+
+def color_coder(master_dict: dict):
+    pyautogui.moveTo(track_list_start)
+    pyautogui.click()
+
 
 
 
@@ -96,8 +105,9 @@ def import_template():
     pyautogui.hotkey('option', 'i', interval=0.1)
     pyautogui.write("FankTemplate1.1")
     pyautogui.press('enter')
+sorter = Sorter(test_path)
+print(sorter.sort())
 
-print(pyautogui.position())
 
 
 
