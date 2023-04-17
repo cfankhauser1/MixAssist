@@ -21,41 +21,49 @@ PATH = '/Users/calebfankhauser/Desktop/MixAssist Test'
 x,y = pyautogui.size()
 screen_size = int(str(x)),int(str(y))
 
+# find screensize and position
+def find_position(screen_size: tuple, pos_multiplier: tuple):
+    screen_x = screen_size[0]
+    screen_y = screen_size[1]
+    mult_x = pos_multiplier[0]
+    mult_y = pos_multiplier[1]
+    position = (screen_x * mult_x, screen_y * mult_y)
+    return position
 
 track_list_start = (21,191)
 color_pos_dict = {
-    "ocean_blue": (137, 358),
-    "light_blue": (119, 348),
-    "drums": (102, 348),
-    "dark_blue": (91, 332),
-    "bass": (80, 314),
-    "pink": (86, 294),
-    "bg_vox": (80, 276),
-    "hot_pink": (104, 260),
-    "lead_vox": (119, 253),
-    "orange": (138, 252),
-    "keys": (158, 259),
-    "gold": (172, 275),
-    "yellow": (184, 295),
-    "key_lime": (182, 313),
-    "guitars": (170, 330),
-    "sea_foam": (156, 348),
-    "sat_ocean_blue": (146, 386),
-    "sat_light_blue": (114, 392),
-    "sat_blue": (73, 377),
-    "sat_dark_blue": (56, 352),
-    "sat_purple": (46, 323),
-    "sat_pink": (50, 281),
-    "sat_flamingo": (58, 262),
-    "sat_hot_pink": (77, 231),
-    "sat_red": (116, 218),
-    "sat_orange": (153, 220),
-    "sat_tangerine": (178, 228),
-    "sat_gold": (199, 247),
-    "sat_yellow": (211, 285),
-    "sat_key_lime": (218, 314),
-    "sat_green": (198, 350),
-    "sat_sea_foam": (179, 373)
+    "ocean_blue": (0.081, 0.34),
+    "light_blue": (0.07, 0.33),
+    "drums": (0.06, 0.33),
+    "dark_blue": (0.05, 0.32),
+    "bass": (0.05, 0.30),
+    "pink": (0.05, 0.28),
+    "bg_vox": (0.048, 0.263),
+    "hot_pink": (0.062, 0.248),
+    "lead_vox": (0.071, 0.241),
+    "orange": (0.082, 0.24),
+    "keys": (0.094, 0.247),
+    "gold": (0.102, 0.262),
+    "yellow": (0.11, 0.281),
+    "key_lime": (0.108, 0.289),
+    "guitars": (0.101, 0.314),
+    "sea_foam": (0.093, 0.331),
+    "sat_ocean_blue": (0.087, 0.368),
+    "sat_light_blue": (0.068, 0.373),
+    "sat_blue": (0.043, 0.359),
+    "sat_dark_blue": (0.033, 0.335),
+    "sat_purple": (0.027, 0.308),
+    "sat_pink": (0.03, 0.268),
+    "sat_flamingo": (0.035, 0.25),
+    "sat_hot_pink": (0.046, 0.22),
+    "sat_red": (0.069, 0.208),
+    "sat_orange": (0.091, 0.21),
+    "sat_tangerine": (0.106, 0.217),
+    "sat_gold": (0.118, 0.235),
+    "sat_yellow": (0.126, 0.271),
+    "sat_key_lime": (0.13, 0.299),
+    "sat_green": (0.118, 0.333),
+    "sat_sea_foam": (0.107, 0.355)
 }
 template_search_dict = {
     "drums": ["Kick Aux", "Snare Aux", "Toms Aux", "Overheads Aux", "Rooms Aux", "Fatso", "K/S Crush", "Devil-loc",
@@ -103,15 +111,13 @@ class Sorter:
         master_dict = {}
         for group in self.group_order:
             if group in self.instrument_groups:
-                print(group)
-                master_dict[group] =  {"number": 0, "color": color_pos_dict.get(group)}
+                # print(group)
+                master_dict[group] =  {"number": 0, "color": find_position(screen_size, color_pos_dict.get(group))}
         for item in self.formated_tracks:
             for key in self.keyword_dict:
                 if item in self.keyword_dict.get(key):
                     master_dict[key]["number"] += 1
         return master_dict
-
-
 
 
 def color_coder(master_dict: dict):
@@ -143,12 +149,12 @@ def import_template(search_dict: dict):
             pyautogui.click(setup_options_dict['clear import search'])
 
 
-print(pyautogui.position())
+print(screen_size)
 sorter = Sorter(PATH)
 color_coder(sorter.sort_to_group())
-import_template(template_search_dict)
-
-
+# import_template(template_search_dict)
+calculate_multiplier = [(round((color_pos_dict[key][0]/screen_size[0]), 3), round((color_pos_dict[key][1]/screen_size[1]), 3)) for key in color_pos_dict]
+# print(calculate_multiplier)
 
 
 
