@@ -13,8 +13,11 @@
 from subprocess import Popen
 import pyautogui
 import os
+from time import sleep
 
-test_path = '/Users/calebfankhauser/Desktop/MixAssist Test'
+TEMPLATE_NAME = "FankTemplate1.1"
+PATH = '/Users/calebfankhauser/Desktop/MixAssist Test'
+
 x,y = pyautogui.size()
 screen_size = int(str(x)),int(str(y))
 
@@ -54,13 +57,24 @@ color_pos_dict = {
     "sat_green": (198, 350),
     "sat_sea_foam": (179, 373)
 }
+template_search_dict = {
+    "drums": ["Kick Aux", "Snare Aux", "Toms Aux", "Overheads Aux", "Rooms Aux", "Fatso", "K/S Crush", "Devil-loc",
+              "False Room", "Drum Plate", "Drum Slap", "Drums Aux"],
+    "bass": ["Bass Aux"],
+    "guitars": ["GTR Plate", "GTR Slap"],
+    "keyboards": ["Keys Aux"],
+    "lead_vox": ["Lead Combiner", "FoxySlap", "Vox Paralell", "Vox Plate", "Vox Chamber", "16th Delay", "8th Delay",
+                 "Lead Vocal Aux"],
+    "bg_vox": ["BG Combiner", "BG FoxySlap", "BG Vox Paralell", "BG Vox Plate", "BG Vox Chamber", "BG 16th Delay",
+                 "BG 8th Delay", "BG Vocal Aux"],
+    "full_mix": ["Rear Bus", "Mix Bus"]
 
-nav_bar_dict = {
-    "file": (125, 11)
 }
-
-
-
+setup_options_dict = {
+    "file": (125, 11),
+    "import add": (422, 453),
+    "clear import search": (490, 395),
+}
 
 class Sorter:
     '''sorts instruments into dict with number of occurances as values'''
@@ -77,7 +91,7 @@ class Sorter:
             'guitars': ["guitar", "gtr", "electric", "acoustic"],
             'keyboards': ["keys", "piano", "wurli", "synth"],
             'lead_vox': ["lead_vox", "vocals", "vox"],
-            'bg_vox': ["bg_vox", "backgrounds", "harmonies", "harmony"]
+            'bg_vox': ["bg_vox", "backgrounds", "harmonies", "harmony", "adlib", "adlibs"]
         }
         for item in self.formated_tracks:
             for key in self.keyword_dict:
@@ -115,21 +129,24 @@ def color_coder(master_dict: dict):
             pyautogui.press('down')
 
 
-
-
-
-
-
-
-
-def import_template():
+def import_template(search_dict: dict):
+    # I can select the tracks I want the import to go under as they are imported but the timing needs to be right
     pyautogui.hotkey('option', 'i', interval=0.1)
-    pyautogui.write("FankTemplate1.1")
+    pyautogui.write(TEMPLATE_NAME)
     pyautogui.press('enter')
+    sleep(5)
+    for key in search_dict:
+        for item in search_dict[key]:
+            pyautogui.write(item)
+            pyautogui.click(setup_options_dict["import add"])
+            pyautogui.click(setup_options_dict['clear import search'])
+            pyautogui.click(setup_options_dict['clear import search'])
 
-sorter = Sorter(test_path)
-print(sorter.sort_to_group())
-# color_coder(sorter.sort())
+
+print(pyautogui.position())
+sorter = Sorter(PATH)
+color_coder(sorter.sort_to_group())
+import_template(template_search_dict)
 
 
 
