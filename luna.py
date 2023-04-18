@@ -1,4 +1,3 @@
-# TODO: Create master template for track order
 # TODO: Load files into Luna (is this even possible?)
 # TODO: figure out how to read text from Luna GUI
 # TODO: color code files by track type, select first item in tracks list color palate, click, move mouse to correct color, /n
@@ -7,13 +6,14 @@
 # TODO: Route
 # TODO: Notify via email or text of complete session
 # TODO: Close Luna
-# TODO: Update color dict to populate positions based on screen size
+
 ### 1-import 2-arrange in order 3-color code 4-import template 5- route
 ## can you check if a program has loaded before a script starts running?
 from subprocess import Popen
 import pyautogui
 import os
 from time import sleep
+
 
 TEMPLATE_NAME = "FankTemplate1.1"
 PATH = '/Users/calebfankhauser/Desktop/MixAssist Test'
@@ -31,6 +31,8 @@ def find_position(screen_size: tuple, pos_multiplier: tuple):
     return position
 
 track_list_start = (21,191)
+# FEATRUE: user should be able to select colors for their track types, write a function to search keys in this dict for
+# matching colors, and replace that string with string holding the track type.
 color_pos_dict = {
     "ocean_blue": (0.081, 0.34),
     "light_blue": (0.07, 0.33),
