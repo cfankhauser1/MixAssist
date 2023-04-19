@@ -1,11 +1,9 @@
 # TODO: Load files into Luna (is this even possible?)
-# TODO: figure out how to read text from Luna GUI
-# TODO: color code files by track type, select first item in tracks list color palate, click, move mouse to correct color, /n
-#  change color, move on with arrow key
 # TODO: Import Session Template
 # TODO: Route
 # TODO: Notify via email or text of complete session
 # TODO: Close Luna
+# TODO: Remote set up?
 
 ### 1-import 2-arrange in order 3-color code 4-import template 5- route
 ## can you check if a program has loaded before a script starts running?
@@ -14,10 +12,10 @@ import pyautogui
 import os
 from time import sleep
 
-
 TEMPLATE_NAME = "FankTemplate1.1"
 PATH = '/Users/calebfankhauser/Desktop/MixAssist Test'
-
+cmd = f'tell app "Safari" to activate'
+track_list_start = (21, 191)
 x,y = pyautogui.size()
 screen_size = int(str(x)),int(str(y))
 
@@ -30,7 +28,12 @@ def find_position(screen_size: tuple, pos_multiplier: tuple):
     position = (screen_x * mult_x, screen_y * mult_y)
     return position
 
-track_list_start = (21,191)
+# open daw of choice
+def open_daw(script):
+    p = Popen(['osascript', '-e', script])
+    p.wait()
+
+
 # FEATRUE: user should be able to select colors for their track types, write a function to search keys in this dict for
 # matching colors, and replace that string with string holding the track type.
 color_pos_dict = {
@@ -87,10 +90,9 @@ setup_options_dict = {
 }
 
 class Sorter:
-    '''sorts instruments into dict with number of occurances as values'''
+    '''sorts instruments into dict with number of occurrences as values'''
     ### longterm figure out a better way to classify tracks than these key lists
     def __init__(self, track_directory: str):
-        #TODO: Read file names in folder to add to tracks list
         self.tracks = os.listdir(track_directory)
         self.formated_tracks = [item.replace('.wav', '') for item in self.tracks]
         self.instrument_groups = []
@@ -152,11 +154,14 @@ def import_template(search_dict: dict):
 
 
 print(screen_size)
-sorter = Sorter(PATH)
-color_coder(sorter.sort_to_group())
-# import_template(template_search_dict)
-calculate_multiplier = [(round((color_pos_dict[key][0]/screen_size[0]), 3), round((color_pos_dict[key][1]/screen_size[1]), 3)) for key in color_pos_dict]
+# sorter = Sorter(PATH)
+# color_coder(sorter.sort_to_group())
+import_template(template_search_dict)
+# calculate_multiplier = [(round((color_pos_dict[key][0]/screen_size[0]), 3), round((color_pos_dict[key][1]/screen_size[1]), 3)) for key in color_pos_dict]
 # print(calculate_multiplier)
+
+
+
 
 
 
